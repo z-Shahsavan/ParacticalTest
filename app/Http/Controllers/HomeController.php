@@ -32,6 +32,10 @@ class HomeController extends Controller
         return view('home',compact('tds'));
     }
 
+    /**
+     * Get a ToDo's id and load its task from DB order by 'sort' field
+     * @return array|string
+     */
     public function loadTasks()
     {
         $id=$_GET['id'];
@@ -77,6 +81,9 @@ class HomeController extends Controller
         return $data;
     }
 
+    /**
+     * Get id of a ToDo list and it's defined 'sort' field and update 'sort' field
+     */
     public function updateSortTodo()
     {
         $id=$_GET['id'];
@@ -86,6 +93,11 @@ class HomeController extends Controller
             ->update(['sort' => $val]);
     }
 
+    /**
+     * Load a list of sorted ToDo lists.
+     * This is run by clicking on 'tick' symbole on top of the Todo's panel
+     * @return string
+     */
     public function sortTodos()
     {
         $uid=auth()->user()->id;
@@ -101,6 +113,11 @@ class HomeController extends Controller
         return $lis;
     }
 
+    /**
+     * Define a new ToDO list
+     * @param Request $request
+     * @return mixed
+     */
     public function newTodo(Request $request)
     {
         $title=$request['title'];
@@ -116,12 +133,20 @@ class HomeController extends Controller
         return $newid;
     }
 
+    /**
+     * Delete a selected ToDO
+     */
     public function deleteTodo()
     {
         $id=$_GET['id'];
         DB::table('to_dos')->where('id',$id)->delete();
     }
 
+    /**
+     * Cancel a ToDO of course it's Tasks by set 'status' field value to '2'
+     * 2 DB commands along a Transaction
+     * @return int
+     */
     public function cancelTodo()
     {
         $id=$_GET['id'];
@@ -141,6 +166,9 @@ class HomeController extends Controller
         }
     }
 
+    /**
+     * Cancel a Task by set 'status' field value to '2'
+     */
     public function cancelTask()
     {
         $id=$_GET['id'];
@@ -149,6 +177,12 @@ class HomeController extends Controller
             ->update(['status' => 2]);
     }
 
+    /**
+     * Done a ToDO list when one of it's Task is done.
+     * By set 'status' fields value to '1'
+     * 2 DB commands along a Transaction
+     * @return int
+     */
     public function doneTask()
     {
         $tdid=$_GET['tdid'];
@@ -169,12 +203,19 @@ class HomeController extends Controller
         }
     }
 
+    /**
+     * Delete a selected Task
+     */
     public function deletetask()
     {
         $id=$_GET['id'];
         DB::table('tasks')->where('id',$id)->delete();
     }
 
+    /**
+     * Show a new 'View' (page) to define a new task.
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     public function newTask()
     {
         $id=$_GET['id'];
